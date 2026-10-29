@@ -178,6 +178,9 @@ istream& operator>>(istream& in, Polynomial& p) // 輸入:n c1 e1 c2 e2 ... cn e
         float c;
         int e;
         in >> c >> e;
+        if (e <= 0)
+            cout << "指數不能為零和負" << endl;
+        if (e < 0) continue;   // 指數為負:係數和指數都不要,整項丟掉
         if (c == 0) continue;
         Polynomial one;        // 只有一項的多項式
         one.NewTerm(c, e);
