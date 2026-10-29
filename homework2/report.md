@@ -2,7 +2,7 @@
 
 作業二
 
-# 題目：多項式類別（Polynomial ADT）
+# 題目：多項式類別（Polynomial）
 
 ## 解題說明
 
