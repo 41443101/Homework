@@ -137,7 +137,7 @@ Polynomial::Polynomial(const Polynomial& p) // 複製建構子:開新陣列再�
 
 Polynomial& Polynomial::operator=(const Polynomial& p)// 指定運算子:先刪舊的,再複製
 {
-    if (this != &p) 
+    if (this != &p)
     {
         delete[] termArray;
         capacity = p.capacity;
@@ -156,7 +156,7 @@ Polynomial::~Polynomial()
 
 void Polynomial::NewTerm(float c, int e) // 尾端加一項,滿了就擴大一倍
 {
-    if (terms == capacity) 
+    if (terms == capacity)
     {
         capacity *= 2;
         Term* temp = new Term[capacity];
@@ -174,23 +174,23 @@ Polynomial Polynomial::Add(Polynomial poly) // 加法:i 走 *this,j 走 poly
 {
     Polynomial res;
     int i = 0, j = 0;
-    while (i < terms && j < poly.terms) 
+    while (i < terms && j < poly.terms)
     {
         int e1 = termArray[i].exp;
         int e2 = poly.termArray[j].exp;
-        if (e1 == e2) 
-        {                      
+        if (e1 == e2)
+        {
             float sum = termArray[i].coef + poly.termArray[j].coef; // 指數一樣,係數相加
             if (sum != 0) res.NewTerm(sum, e1);
             i++;
             j++;
         }
-        else if (e1 > e2) 
-        {                
+        else if (e1 > e2)
+        {
             res.NewTerm(termArray[i].coef, e1); // 先放指數大的
             i++;
         }
-        else 
+        else
         {
             res.NewTerm(poly.termArray[j].coef, e2);
             j++;
@@ -212,9 +212,9 @@ Polynomial Polynomial::Mult(Polynomial poly) // 乘法:兩兩相乘  排序  合
     int total = terms * poly.terms;   // 乘出來的總項數
     Term* temp = new Term[total];
     int k = 0;
-    for (int i = 0; i < terms; i++) 
+    for (int i = 0; i < terms; i++)
     {
-        for (int j = 0; j < poly.terms; j++) 
+        for (int j = 0; j < poly.terms; j++)
         {
             temp[k].coef = termArray[i].coef * poly.termArray[j].coef;
             temp[k].exp = termArray[i].exp + poly.termArray[j].exp;
@@ -222,15 +222,15 @@ Polynomial Polynomial::Mult(Polynomial poly) // 乘法:兩兩相乘  排序  合
         }
     }
     sort(temp, temp + total, [](const Term& a, const Term& b)  // 指數由大到小排序
-    {
-        return a.exp > b.exp;
-    });
-    int i = 0; 
+        {
+            return a.exp > b.exp;
+        });
+    int i = 0;
     while (i < total) // 同指數的合併
     {
         int e = temp[i].exp;
         float sum = 0;
-        while (i < total && temp[i].exp == e) 
+        while (i < total && temp[i].exp == e)
         {
             sum += temp[i].coef;
             i++;
@@ -254,7 +254,7 @@ istream& operator>>(istream& in, Polynomial& p) // 輸入:n c1 e1 c2 e2 ... cn e
     int n;
     in >> n;
     Polynomial res;
-    for (int i = 0; i < n; i++) 
+    for (int i = 0; i < n; i++)
     {
         float c;
         int e;
@@ -270,12 +270,12 @@ istream& operator>>(istream& in, Polynomial& p) // 輸入:n c1 e1 c2 e2 ... cn e
 
 ostream& operator<<(ostream& out, const Polynomial& p) // 輸出:3x^2 - x + 1
 {
-    if (p.terms == 0) 
+    if (p.terms == 0)
     {
         out << 0;
         return out;
     }
-    for (int i = 0; i < p.terms; i++) 
+    for (int i = 0; i < p.terms; i++)
     {
         float c = p.termArray[i].coef;
         int e = p.termArray[i].exp;
@@ -287,10 +287,10 @@ ostream& operator<<(ostream& out, const Polynomial& p) // 輸出:3x^2 - x + 1
     return out;
 }
 
-int main() 
+int main()
 {
     Polynomial A, B;
-    cout << "Input A (n c1 e1 c2 e2 ...): ";
+    cout << "Input A: ";
     cin >> A;
     cout << "Input B: ";
     cin >> B;
