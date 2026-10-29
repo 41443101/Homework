@@ -6,49 +6,46 @@ using namespace std;
 
 class Polynomial;
 
-// «Y¼Æ + «ü¼Æ 
-class Term 
+class Term // ä¿‚æ•¸ + æŒ‡æ•¸ 
 {
     friend class Polynomial;
     friend ostream& operator<<(ostream&, const Polynomial&);
 private:
-    float coef;  // «Y¼Æ
-    int exp;     // «ü¼Æ
+    float coef;  // ä¿‚æ•¸
+    int exp;     // æŒ‡æ•¸
 };
 
-// ¦h¶µ¦¡Ãş§O
-class Polynomial 
+class Polynomial // å¤šé …å¼é¡åˆ¥
 {
 public:
     Polynomial();                               // p(x) = 0
-    Polynomial(const Polynomial& p);            // ½Æ»s«Øºc¤l
-    Polynomial& operator=(const Polynomial& p); // «ü©w¹Bºâ¤l
-    ~Polynomial();                              // ¸Ñºc¤l
+    Polynomial(const Polynomial& p);            // è¤‡è£½å»ºæ§‹å­
+    Polynomial& operator=(const Polynomial& p); // æŒ‡å®šé‹ç®—å­
+    ~Polynomial();                              // è§£æ§‹å­
 
-    Polynomial Add(Polynomial poly);   // ¥[ªk
-    Polynomial Mult(Polynomial poly);  // ­¼ªk
-    float Eval(float f);               // ¥N¤J x = f
+    Polynomial Add(Polynomial poly);   // åŠ æ³•
+    Polynomial Mult(Polynomial poly);  // ä¹˜æ³•
+    float Eval(float f);               // ä»£å…¥ x = f
 
     friend istream& operator>>(istream& in, Polynomial& p);
     friend ostream& operator<<(ostream& out, const Polynomial& p);
 
 private:
-    Term* termArray;  // «D¹s¶µ°}¦C(«ü¼Æ¥Ñ¤j¨ì¤p)
-    int capacity;     // °}¦C®e¶q
-    int terms;        // ¶µ¼Æ
-    void NewTerm(float c, int e);  // §Àºİ¥[¤@¶µ
+    Term* termArray;  // éé›¶é …é™£åˆ—(æŒ‡æ•¸ç”±å¤§åˆ°å°)
+    int capacity;     // é™£åˆ—å®¹é‡
+    int terms;        // é …æ•¸
+    void NewTerm(float c, int e);  // å°¾ç«¯åŠ ä¸€é …
 };
 
-// «Øºc¤l:ªÅ¦h¶µ¦¡
-Polynomial::Polynomial() 
+Polynomial::Polynomial() // å»ºæ§‹å­:ç©ºå¤šé …å¼
 {
     capacity = 2;
     terms = 0;
     termArray = new Term[capacity];
 }
 
-// ½Æ»s«Øºc¤l:¶}·s°}¦C¦A§Û¸ê®Æ
-Polynomial::Polynomial(const Polynomial& p) 
+Polynomial::Polynomial(const Polynomial& p) // è¤‡è£½å»ºæ§‹å­:é–‹æ–°é™£åˆ—å†æŠ„è³‡æ–™
+
 {
     capacity = p.capacity;
     terms = p.terms;
@@ -57,8 +54,7 @@ Polynomial::Polynomial(const Polynomial& p)
         termArray[i] = p.termArray[i];
 }
 
-// «ü©w¹Bºâ¤l:¥ı§RÂÂªº,¦A½Æ»s
-Polynomial& Polynomial::operator=(const Polynomial& p)
+Polynomial& Polynomial::operator=(const Polynomial& p)// æŒ‡å®šé‹ç®—å­:å…ˆåˆªèˆŠçš„,å†è¤‡è£½
 {
     if (this != &p) 
     {
@@ -72,14 +68,12 @@ Polynomial& Polynomial::operator=(const Polynomial& p)
     return *this;
 }
 
-// ¸Ñºc¤l
 Polynomial::~Polynomial()
 {
     delete[] termArray;
 }
 
-// §Àºİ¥[¤@¶µ,º¡¤F´NÂX¤j¤@­¿
-void Polynomial::NewTerm(float c, int e) 
+void Polynomial::NewTerm(float c, int e) // å°¾ç«¯åŠ ä¸€é …,æ»¿äº†å°±æ“´å¤§ä¸€å€
 {
     if (terms == capacity) 
     {
@@ -95,8 +89,7 @@ void Polynomial::NewTerm(float c, int e)
     terms++;
 }
 
-// ¥[ªk:i ¨« *this,j ¨« poly
-Polynomial Polynomial::Add(Polynomial poly) 
+Polynomial Polynomial::Add(Polynomial poly) // åŠ æ³•:i èµ° *this,j èµ° poly
 {
     Polynomial res;
     int i = 0, j = 0;
@@ -105,15 +98,15 @@ Polynomial Polynomial::Add(Polynomial poly)
         int e1 = termArray[i].exp;
         int e2 = poly.termArray[j].exp;
         if (e1 == e2) 
-        {                       // «ü¼Æ¤@¼Ë,«Y¼Æ¬Û¥[
-            float sum = termArray[i].coef + poly.termArray[j].coef;
+        {                      
+            float sum = termArray[i].coef + poly.termArray[j].coef; // æŒ‡æ•¸ä¸€æ¨£,ä¿‚æ•¸ç›¸åŠ 
             if (sum != 0) res.NewTerm(sum, e1);
             i++;
             j++;
         }
         else if (e1 > e2) 
-        {                 // ¥ı©ñ«ü¼Æ¤jªº
-            res.NewTerm(termArray[i].coef, e1);
+        {                
+            res.NewTerm(termArray[i].coef, e1); // å…ˆæ”¾æŒ‡æ•¸å¤§çš„
             i++;
         }
         else 
@@ -122,21 +115,20 @@ Polynomial Polynomial::Add(Polynomial poly)
             j++;
         }
     }
-    // ³Ñ¤Uªºª½±µ±µ¤W
-    for (; i < terms; i++)
+    for (; i < terms; i++) // å‰©ä¸‹çš„ç›´æ¥æ¥ä¸Š
         res.NewTerm(termArray[i].coef, termArray[i].exp);
     for (; j < poly.terms; j++)
         res.NewTerm(poly.termArray[j].coef, poly.termArray[j].exp);
     return res;
 }
 
-// ­¼ªk:¨â¨â¬Û­¼  ±Æ§Ç  ¦X¨Ö¦P¦¸¶µ
-Polynomial Polynomial::Mult(Polynomial poly) 
+Polynomial Polynomial::Mult(Polynomial poly) // ä¹˜æ³•:å…©å…©ç›¸ä¹˜  æ’åº  åˆä½µåŒæ¬¡é …
+
 {
     Polynomial res;
     if (terms == 0 || poly.terms == 0) return res;
 
-    int total = terms * poly.terms;   // ­¼¥X¨ÓªºÁ`¶µ¼Æ
+    int total = terms * poly.terms;   // ä¹˜å‡ºä¾†çš„ç¸½é …æ•¸
     Term* temp = new Term[total];
     int k = 0;
     for (int i = 0; i < terms; i++) 
@@ -148,16 +140,12 @@ Polynomial Polynomial::Mult(Polynomial poly)
             k++;
         }
     }
-
-    // «ü¼Æ¥Ñ¤j¨ì¤p±Æ§Ç
-    sort(temp, temp + total, [](const Term& a, const Term& b) 
+    sort(temp, temp + total, [](const Term& a, const Term& b)  // æŒ‡æ•¸ç”±å¤§åˆ°å°æ’åº
     {
         return a.exp > b.exp;
     });
-
-    // ¦P«ü¼Æªº¦X¨Ö
-    int i = 0;
-    while (i < total) 
+    int i = 0; 
+    while (i < total) // åŒæŒ‡æ•¸çš„åˆä½µ
     {
         int e = temp[i].exp;
         float sum = 0;
@@ -172,8 +160,7 @@ Polynomial Polynomial::Mult(Polynomial poly)
     return res;
 }
 
-// ¥N¤J f ­pºâ
-float Polynomial::Eval(float f) 
+float Polynomial::Eval(float f) // ä»£å…¥ f è¨ˆç®—
 {
     float sum = 0;
     for (int i = 0; i < terms; i++)
@@ -181,8 +168,7 @@ float Polynomial::Eval(float f)
     return sum;
 }
 
-// ¿é¤J:n c1 e1 c2 e2 ... cn en
-istream& operator>>(istream& in, Polynomial& p) 
+istream& operator>>(istream& in, Polynomial& p) // è¼¸å…¥:n c1 e1 c2 e2 ... cn en
 {
     int n;
     in >> n;
@@ -193,16 +179,15 @@ istream& operator>>(istream& in, Polynomial& p)
         int e;
         in >> c >> e;
         if (c == 0) continue;
-        Polynomial one;        // ¥u¦³¤@¶µªº¦h¶µ¦¡
+        Polynomial one;        // åªæœ‰ä¸€é …çš„å¤šé …å¼
         one.NewTerm(c, e);
-        res = res.Add(one);    // ¥Î Add ¦Û°Ê±Æ§Ç¡B¦X¨Ö
+        res = res.Add(one);    // ç”¨ Add è‡ªå‹•æ’åºã€åˆä½µ
     }
     p = res;
     return in;
 }
 
-// ¿é¥X:3x^2 - x + 1
-ostream& operator<<(ostream& out, const Polynomial& p) 
+ostream& operator<<(ostream& out, const Polynomial& p) // è¼¸å‡º:3x^2 - x + 1
 {
     if (p.terms == 0) 
     {
