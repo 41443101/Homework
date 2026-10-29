@@ -209,14 +209,17 @@ ostream& operator<<(ostream& out, const Polynomial& p) // 輸出:3x^2 - x + 1
 int main()
 {
     Polynomial A, B;
+    float x;
     cout << "Input A: ";
     cin >> A;
     cout << "Input B: ";
     cin >> B;
+    cout << "Input x: ";
+    cin >> x;
     cout << "A     = " << A << endl;
     cout << "B     = " << B << endl;
     cout << "A + B = " << A.Add(B) << endl;
     cout << "A * B = " << A.Mult(B) << endl;
-    cout << "A(2)  = " << A.Eval(2) << endl;
+    cout << "A(" << x << ")  = " << A.Eval(x) << endl;
     return 0;
 }
