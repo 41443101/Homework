@@ -36,7 +36,7 @@
 
 ### 動態擴充（NewTerm）
 
-`NewTerm(c, e)` 負責在尾端加一項。如果 `terms == capacity` 就把容量乘 2，開新陣列，把舊資料抄過去，再刪掉舊陣列。每次擴充都加倍，所以平均下來每次加一項只要 O(1)。
+`NewTerm(c, e)` 負責在尾端加一項。如果 `terms == capacity` 就把容量乘 2，開新陣列，把舊資料抄過去，再刪掉舊陣列。每次擴充都加倍。
 
 ### 加法：像合併兩個排序好的陣列
 
@@ -62,7 +62,7 @@
 
 ### 輸入：用 Add 自動排序
 
-使用者輸入的項不一定有排好，也可能有重複的指數（例如同時輸入 `2x²` 和 `3x²`）。我的做法是：每讀到一項，就把它做成「只有一項的多項式」，再用 `Add` 加進結果。因為 `Add` 本來就會排序、合併同次項、去掉係數 0，所以輸入完的多項式一定是合法的。
+使用者輸入的項不一定有排好，也可能有重複的指數（例如同時輸入 `2x²` 和 `3x²`）。我的做法是：每讀到一項，就把它做成「只有一項的多項式」，再用 `Add` 加進結果。因為 `Add` 本來就會排序、合併同次項、去掉係數。
 
 ### 輸出
 
@@ -87,8 +87,7 @@ using namespace std;
 
 class Polynomial;
 
-// 係數 + 指數 
-class Term 
+class Term // 係數 + 指數 
 {
     friend class Polynomial;
     friend ostream& operator<<(ostream&, const Polynomial&);
@@ -97,8 +96,7 @@ private:
     int exp;     // 指數
 };
 
-// 多項式類別
-class Polynomial 
+class Polynomial // 多項式類別
 {
 public:
     Polynomial();                               // p(x) = 0
@@ -120,16 +118,15 @@ private:
     void NewTerm(float c, int e);  // 尾端加一項
 };
 
-// 建構子:空多項式
-Polynomial::Polynomial() 
+Polynomial::Polynomial() // 建構子:空多項式
 {
     capacity = 2;
     terms = 0;
     termArray = new Term[capacity];
 }
 
-// 複製建構子:開新陣列再抄資料
-Polynomial::Polynomial(const Polynomial& p) 
+Polynomial::Polynomial(const Polynomial& p) // 複製建構子:開新陣列再抄資料
+
 {
     capacity = p.capacity;
     terms = p.terms;
@@ -138,8 +135,7 @@ Polynomial::Polynomial(const Polynomial& p)
         termArray[i] = p.termArray[i];
 }
 
-// 指定運算子:先刪舊的,再複製
-Polynomial& Polynomial::operator=(const Polynomial& p)
+Polynomial& Polynomial::operator=(const Polynomial& p)// 指定運算子:先刪舊的,再複製
 {
     if (this != &p) 
     {
@@ -153,14 +149,12 @@ Polynomial& Polynomial::operator=(const Polynomial& p)
     return *this;
 }
 
-// 解構子
 Polynomial::~Polynomial()
 {
     delete[] termArray;
 }
 
-// 尾端加一項,滿了就擴大一倍
-void Polynomial::NewTerm(float c, int e) 
+void Polynomial::NewTerm(float c, int e) // 尾端加一項,滿了就擴大一倍
 {
     if (terms == capacity) 
     {
@@ -176,8 +170,7 @@ void Polynomial::NewTerm(float c, int e)
     terms++;
 }
 
-// 加法:i 走 *this,j 走 poly
-Polynomial Polynomial::Add(Polynomial poly) 
+Polynomial Polynomial::Add(Polynomial poly) // 加法:i 走 *this,j 走 poly
 {
     Polynomial res;
     int i = 0, j = 0;
@@ -186,15 +179,15 @@ Polynomial Polynomial::Add(Polynomial poly)
         int e1 = termArray[i].exp;
         int e2 = poly.termArray[j].exp;
         if (e1 == e2) 
-        {                       // 指數一樣,係數相加
-            float sum = termArray[i].coef + poly.termArray[j].coef;
+        {                      
+            float sum = termArray[i].coef + poly.termArray[j].coef; // 指數一樣,係數相加
             if (sum != 0) res.NewTerm(sum, e1);
             i++;
             j++;
         }
         else if (e1 > e2) 
-        {                 // 先放指數大的
-            res.NewTerm(termArray[i].coef, e1);
+        {                
+            res.NewTerm(termArray[i].coef, e1); // 先放指數大的
             i++;
         }
         else 
@@ -203,16 +196,15 @@ Polynomial Polynomial::Add(Polynomial poly)
             j++;
         }
     }
-    // 剩下的直接接上
-    for (; i < terms; i++)
+    for (; i < terms; i++) // 剩下的直接接上
         res.NewTerm(termArray[i].coef, termArray[i].exp);
     for (; j < poly.terms; j++)
         res.NewTerm(poly.termArray[j].coef, poly.termArray[j].exp);
     return res;
 }
 
-// 乘法:兩兩相乘  排序  合併同次項
-Polynomial Polynomial::Mult(Polynomial poly) 
+Polynomial Polynomial::Mult(Polynomial poly) // 乘法:兩兩相乘  排序  合併同次項
+
 {
     Polynomial res;
     if (terms == 0 || poly.terms == 0) return res;
@@ -229,16 +221,12 @@ Polynomial Polynomial::Mult(Polynomial poly)
             k++;
         }
     }
-
-    // 指數由大到小排序
-    sort(temp, temp + total, [](const Term& a, const Term& b) 
+    sort(temp, temp + total, [](const Term& a, const Term& b)  // 指數由大到小排序
     {
         return a.exp > b.exp;
     });
-
-    // 同指數的合併
-    int i = 0;
-    while (i < total) 
+    int i = 0; 
+    while (i < total) // 同指數的合併
     {
         int e = temp[i].exp;
         float sum = 0;
@@ -253,8 +241,7 @@ Polynomial Polynomial::Mult(Polynomial poly)
     return res;
 }
 
-// 代入 f 計算
-float Polynomial::Eval(float f) 
+float Polynomial::Eval(float f) // 代入 f 計算
 {
     float sum = 0;
     for (int i = 0; i < terms; i++)
@@ -262,8 +249,7 @@ float Polynomial::Eval(float f)
     return sum;
 }
 
-// 輸入:n c1 e1 c2 e2 ... cn en
-istream& operator>>(istream& in, Polynomial& p) 
+istream& operator>>(istream& in, Polynomial& p) // 輸入:n c1 e1 c2 e2 ... cn en
 {
     int n;
     in >> n;
@@ -282,8 +268,7 @@ istream& operator>>(istream& in, Polynomial& p)
     return in;
 }
 
-// 輸出:3x^2 - x + 1
-ostream& operator<<(ostream& out, const Polynomial& p) 
+ostream& operator<<(ostream& out, const Polynomial& p) // 輸出:3x^2 - x + 1
 {
     if (p.terms == 0) 
     {
@@ -331,14 +316,6 @@ int main()
 | `Eval` | **O(m)** | O(1) | 每項算一次 `pow`，把 `pow` 當成常數時間 |
 | `operator>>` | **O(n²)** | O(n) | 讀 n 項，第 k 次呼叫 `Add` 要 O(k)，加起來是 O(n²) |
 | `operator<<` | O(項數) | O(1) | 每項印一次 |
-
-### 補充說明
-
-1. **`Add` 為什麼是線性的**：因為兩邊都是排好序的，只要往前走，每一項最多被看一次。
-2. **`Mult` 的空間**：`temp` 要一次放下 mn 項，這是乘法最吃記憶體的地方。如果兩個多項式各有 1000 項，就要暫存 100 萬項。
-3. **`Mult` 的時間瓶頸**：mn 個乘法本身只要 O(mn)，真正多出來的 log 來自排序。
-4. **`operator>>` 比較慢的原因**：它每讀一項就呼叫一次 `Add`，而 `Add` 每次都要重新複製整個結果。這是用簡單寫法換來的代價，輸入項數不多時完全沒問題。
-5. **傳值的額外成本**：`Add` 和 `Mult` 的參數是傳值，呼叫時會多做一次 O(n) 的複製，但不改變上面的複雜度。
 
 ## 測試與驗證
 
@@ -617,19 +594,3 @@ n 變 2 倍，時間約變 4 倍，符合 O(n²)，和效能分析推論的一�
 **三、乘法的合併步驟。** 一開始以為乘法只要兩層迴圈乘完就好，後來測 (x+1)(x−1) 才發現會有 `−x` 和 `x` 兩項，一定要合併同次項。所以改成先全部乘出來，排序，再把相同指數的加在一起，這樣也順便處理了係數相消成 0 的情況。
 
 **四、動態陣列加倍。** `NewTerm` 容量不夠時直接加倍，而不是一次加 1。我用效能分析的觀念想過，加 1 的話每加一項都要複製一次，總共是 O(n²)；加倍的話平均下來每項只要 O(1)。
-
-### 和作業一的比較
-
-作業一的重點是用陣列做**堆疊**來取代遞迴，這次是用陣列做**動態儲存的多項式**。兩次都是自己管理陣列和 `new` / `delete[]`，但這次要多考慮「物件被複製」的問題。
-
-### 可以改進的地方
-
-1. **輸出係數 1 的格式。** 目前會印成 `1x`、`3x^2 - 1x + 1`，數學上通常寫成 `x`、`3x^2 - x + 1`。只要在 `operator<<` 裡，當係數的絕對值是 1 而且指數大於 0 時，就不要印係數即可。
-2. **`operator>>` 太慢。** 如前面效能量測所示，輸入 n 項是 O(n²)，可以改成先讀進暫時陣列、排序、合併，變成 O(n log n)。
-3. **`Add` 和 `Mult` 的參數傳值。** 每次呼叫都多複製一份，可以改成 `const Polynomial&` 傳參考，省掉不必要的複製。
-4. **`sum != 0` 的浮點數比較。** 係數用 `float`，如果是小數相加，可能出現 0.1 + 0.2 − 0.3 這種不剛好等於 0 的情況。作業裡的整數係數沒問題，但嚴謹一點應該用一個很小的誤差範圍來判斷。
-5. **不支援負指數。** 這題的多項式本來就不需要，但 `Eval` 和輸入並沒有檢查，輸入負指數時不會報錯。
-
-### 總結
-
-這次作業讓我把「類別、動態記憶體、運算子多載、排序與合併」一次用到，也再次體會到：先決定好資料的**不變條件**（這題是「由大到小排好、沒有 0 係數、沒有重複指數」），後面的函式就能寫得簡單又不容易錯。
