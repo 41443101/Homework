@@ -45,7 +45,6 @@ Polynomial::Polynomial() // 建構子:空多項式
 }
 
 Polynomial::Polynomial(const Polynomial& p) // 複製建構子:開新陣列再抄資料
-
 {
     capacity = p.capacity;
     terms = p.terms;
@@ -122,8 +121,7 @@ Polynomial Polynomial::Add(Polynomial poly) // 加法:i 走 *this,j 走 poly
     return res;
 }
 
-Polynomial Polynomial::Mult(Polynomial poly) // 乘法:兩兩相乘  排序  合併同次項
-
+Polynomial Polynomial::Mult(Polynomial poly) // 乘法:兩兩相乘 → 排序 → 合併同次項
 {
     Polynomial res;
     if (terms == 0 || poly.terms == 0) return res;
@@ -224,5 +222,6 @@ int main()
     cout << "A + B = " << A.Add(B) << endl;
     cout << "A * B = " << A.Mult(B) << endl;
     cout << "A(" << x << ")  = " << A.Eval(x) << endl;
+    cout << "B(" << x << ")  = " << B.Eval(x) << endl;
     return 0;
 }
